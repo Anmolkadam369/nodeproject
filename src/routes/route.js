@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const booksController = require("../Controllers/booksController")
 router.get("/test-me", function(req,res){
-    res.send({status: false, message:"just testing"})
+    res.send({status: true, message:"Welcome to my application"})
 })
 
 router.post("/createNewBook", booksController.createNewBook);
