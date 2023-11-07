@@ -5,11 +5,13 @@ const bookModel = require("../Models/bookModel");
 const createNewBook = async function (req, res) {
   try {
     let data = req.body;
-    const { title, author, summary } = data;
+    let { bookCover, title, author, summary } = data;
     //body
     if (Object.keys(data).length == 0)
       return res.status(400).send({ msg: "data is mandatory" });
 
+      bookCover = data.bookCover = req.image;
+      console.log(bookCover)
     if (!title)
       return res
         .status(400)
@@ -55,6 +57,7 @@ const createNewBook = async function (req, res) {
         .status(400)
         .send({ status: false, message: "summary should be in String" });
 
+        console.log(data)
     const createData = await bookModel.create(data);
     res.status(201).send({ msg: createData });
   } catch (error) {
@@ -141,12 +144,12 @@ const updatedBook = async (req, res) => {
           .send({ status: false, message: "summary should be in String" });
     }
     console.log(data)
-
+    const foundBook = await bookModel.findOne({_id:bookId,isDeleted:false})
+    if (!foundBook) return res.status(404).json({ message: "Book not found" });
     const updatedBook = await bookModel.findByIdAndUpdate(
       bookId,{ $set : { title:title, author:author, summary:summary }},{ new: true });
         console.log(updatedBook)
-    if (!updatedBook) res.status(404).json({ error: "Book not found" });
-    res.status(200).send({ msg: updatedBook });
+    return res.status(200).send({ msg: updatedBook });
   } catch (error) {
     return res.status(500).send({ status: false, error: error.message });
   }
