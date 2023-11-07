@@ -83,7 +83,7 @@ const getParticularBook = async (req, res) => {
         .status(400)
         .send({ status: false, message: "please provide book Id" });
     const book = await bookModel.findOne({_id :bookId, isDeleted:false});
-    if (!book) res.status(404).json({ error: "Book not found" });
+    if (!book) return res.status(404).send({ error: "Book not found" });
     res.status(200).send({ msg: book });
   } catch (error) {
     return res.status(500).send({ status: false, error: error.message });
